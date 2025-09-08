@@ -1,17 +1,18 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState } from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
     <>
       <main>
-        start
+        Start
+        <button onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
       </main>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
