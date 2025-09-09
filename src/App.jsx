@@ -1,7 +1,6 @@
-import React, { PopupSystem } from "./components/PopUp";
+import { PopupSystem } from "./components/PopUp";
 import { Card, CardContent, CardHeader } from "./components/card";
 import GlowText from "./components/GlowText";
-import './App.css'
 
 const images = [
   'Popups/you.png',
