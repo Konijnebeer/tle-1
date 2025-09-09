@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import React, { PopupSystem } from "./components/PopUp";
+import { Card, CardContent, CardHeader } from "./components/card";
+import GlowText from "./components/GlowText";
 import './App.css'
 
 const images = [
@@ -52,41 +52,21 @@ export default function App() {
   }
 
   return (
-    <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
-      <h1>Random Image</h1>
-      <img src={imageSrc} alt="" style={{ maxWidth: '100%', position: 'absolute', top: position.top, left: position.left }}
-      onClick={() => setImageSrc(null)} />
-    </div>
+    <>
+      <main className="flex justify-center items-center min-h-screen relative">
+        <Card className="w-full max-w-6xl max-h-[80vh] aspect-square p-10 bg-gray-900 before:border-[3px] before:bg-linear-120 before:from-gray-950 before:via-gray-700 before:to-gray-950/50">
+          <CardHeader>
+            <GlowText className="text-4xl font-bold text-center relative mx-80 bg-linear-[110deg,blue_35%,red_35%,red_66%,yellow_60%,yellow_100%] before:bg-linear-[120deg,blue_35%,red_35%,red_66%,yellow_66%,yellow_99%]">
+              Start Working
+            </GlowText>
+          </CardHeader>
+          <CardContent>
+          </CardContent>
+        </Card>
+      </main>
+      <PopupSystem />
+    </>
   );
 }
 
-// function App() {
-//   const [count, setCount] = useState(0)
-
-//   return (
-//     <>
-//       <div>
-//         <a href="https://vite.dev" target="_blank">
-//           <img src={viteLogo} className="logo" alt="Vite logo" />
-//         </a>
-//         <a href="https://react.dev" target="_blank">
-//           <img src={reactLogo} className="logo react" alt="React logo" />
-//         </a>
-//       </div>
-//       <h1>Vite + React</h1>
-//       <div className="card">
-//         <button onClick={() => setCount((count) => count + 1)}>
-//           count is {count}
-//         </button>
-//         <p>
-//           Edit <code>src/App.jsx</code> and save to test HMR
-//         </p>
-//       </div>
-//       <p className="read-the-docs">
-//         Click on the Vite and React logos to learn more
-//       </p>
-//     </>
-//   )
-// }
-
-// export default App
+export default App;
