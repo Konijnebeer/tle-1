@@ -21,7 +21,7 @@ function ErrorPopup() {
 function WarningPopup({ id, onClose }) {
   return (
     <div className="bg-yellow-100 border-2 border-yellow-500 p-3 text-yellow-800 relative">
-      <button 
+      <button
         onClick={() => onClose(id)}
         className="absolute top-1 right-1 w-5 h-5 bg-yellow-600 text-white rounded-full text-xs font-bold hover:bg-yellow-700 flex items-center justify-center"
       >
@@ -42,12 +42,31 @@ function PopupSystem() {
 
   // List of different popup types with their natural dimensions
   const popupTypes = [
-    { type: 'image', url: 'https://picsum.photos/200/200', width: 200, height: 200 }, // Square
-    { type: 'image', url: 'https://picsum.photos/300/200', width: 300, height: 200 }, // Landscape
-    { type: 'image', url: 'https://picsum.photos/350/200', width: 350, height: 200 }, // Wide landscape
-    { type: 'image', url: 'https://picsum.photos/200/350', width: 200, height: 350 }, // Portrait
-    { type: 'image', url: 'https://picsum.photos/250/250', width: 250, height: 250 }, // Medium square
-    { type: 'image', url: 'https://picsum.photos/200/300', width: 200, height: 300 }, // Tall portrait
+    { type: 'image', url: 'Popups/8ball_1.png', width: 350, height: 200 }, // Square
+    { type: 'image', url: 'Popups/8ball_2.png', width: 350, height: 200 }, // Landscape
+    { type: 'image', url: 'Popups/8ball_3.png', width: 350, height: 200 }, // Wide landscape
+    { type: 'image', url: 'Popups/apple.png', width: 250, height: 200 }, // Portrait
+    { type: 'image', url: 'Popups/construct.png', width: 450, height: 250 }, // Medium square
+    { type: 'image', url: 'Popups/doom.png', width: 300, height: 300 }, // Tall portrait
+    { type: 'image', url: 'Popups/you.png', width: 200, height: 200 },
+    { type: 'image', url: 'Popups/me.png', width: 500, height: 200 },
+    { type: 'image', url: 'Popups/friend.png', width: 200, height: 200 },
+    { type: 'image', url: 'Popups/frog.png', width: 250, height: 200 },
+    { type: 'image', url: 'Popups/gun.png', width: 250, height: 200 },
+    { type: 'image', url: 'Popups/hell.png', width: 250, height: 200 },
+    { type: 'image', url: 'Popups/hivemind.png', width: 300, height: 200 },
+    { type: 'image', url: 'Popups/holy_cow.png', width: 300, height: 200 },
+    { type: 'image', url: 'Popups/mona_lisa.png', width: 300, height: 200 },
+    { type: 'image', url: 'Popups/nerd.png', width: 500, height: 200 },
+    { type: 'image', url: 'Popups/my_movie.png', width: 200, height: 200 },
+    { type: 'image', url: 'Popups/octagon.png', width: 200, height: 200 },
+    { type: 'image', url: 'Popups/question.png', width: 400, height: 200 },
+    { type: 'image', url: 'Popups/ram.png', width: 400, height: 200 },
+    { type: 'image', url: 'Popups/rom.png', width: 500, height: 200 },
+    { type: 'image', url: 'Popups/shop.png', width: 350, height: 200 },
+    { type: 'image', url: 'Popups/sign.png', width: 200, height: 200 },
+    { type: 'image', url: 'Popups/tenna.png', width: 300, height: 200 },
+    { type: 'image', url: 'Popups/wizard.png', width: 300, height: 200 },
     { type: 'component', Component: VirusPopup },
     { type: 'component', Component: ErrorPopup },
     { type: 'component', Component: WarningPopup },
@@ -55,12 +74,14 @@ function PopupSystem() {
 
   // Create a new popup at random position
   function createPopup() {
+    const popupLimit = 50;
+    if (popups.length >= popupLimit) return;
     const popup = popupTypes[Math.floor(Math.random() * popupTypes.length)];
-    
+
     // Use popup dimensions for proper positioning, fallback to 200 for components
     const popupWidth = popup.width || 200;
     const popupHeight = popup.height || 200;
-    
+
     const newPopup = {
       id: nextId,
       x: Math.random() * (window.innerWidth - popupWidth),
@@ -68,14 +89,17 @@ function PopupSystem() {
       rotation: Math.random() * 20 - 10,
       ...popup
     };
-    
+
     setPopups(prev => [...prev, newPopup]);
     setNextId(prev => prev + 1);
   }
 
   // Remove a popup
   function removePopup(id) {
-    setPopups(prev => prev.filter(popup => popup.id !== id));
+    setPopups(prev => {
+      const updated = prev.filter(popup => popup.id !== id);
+      return updated;
+    });
     setClosedCount(prev => prev + 1);
   }
 
@@ -105,7 +129,7 @@ function PopupSystem() {
   // Auto spawn popups (only when not paused)
   useEffect(() => {
     if (isPaused) return;
-    
+
     const interval = setInterval(createPopup, spawnSpeed);
     return () => clearInterval(interval);
   }, [spawnSpeed, nextId, isPaused]);
