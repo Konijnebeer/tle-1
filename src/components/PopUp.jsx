@@ -18,9 +18,15 @@ function ErrorPopup() {
   );
 }
 
-function WarningPopup() {
+function WarningPopup({ id, onClose }) {
   return (
-    <div className="bg-yellow-100 border-2 border-yellow-500 p-3 text-yellow-800">
+    <div className="bg-yellow-100 border-2 border-yellow-500 p-3 text-yellow-800 relative">
+      <button 
+        onClick={() => onClose(id)}
+        className="absolute top-1 right-1 w-5 h-5 bg-yellow-600 text-white rounded-full text-xs font-bold hover:bg-yellow-700 flex items-center justify-center"
+      >
+        ×
+      </button>
       <div className="font-bold">⚠️ Warning!</div>
       <div>System Alert</div>
     </div>
@@ -120,7 +126,7 @@ function PopupSystem() {
               alt="popup"
             />
           ) : (
-            <popup.Component />
+            <popup.Component id={popup.id} onClose={removePopup} />
           )}
         </div>
       ))}
