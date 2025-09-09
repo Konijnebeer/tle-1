@@ -1,4 +1,5 @@
-import React, { PopupSystem } from "./components/PopUp";
+import { useState, useEffect } from "react";
+import { PopupSystem } from "./components/PopUp";
 import { Card, CardContent, CardHeader } from "./components/card";
 import GlowText from "./components/GlowText";
 import './App.css'
