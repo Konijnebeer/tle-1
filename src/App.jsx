@@ -5,7 +5,7 @@ function App() {
 
   return (
     <>
-      <main>
+      <main className="bg-white">
         Start
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
