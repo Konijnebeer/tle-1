@@ -37,6 +37,8 @@ function PopupSystem() {
   const [popups, setPopups] = useState([]);
   const [spawnSpeed, setSpawnSpeed] = useState(2000);
   const [nextId, setNextId] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [closedCount, setClosedCount] = useState(0);
 
   // List of different popup types with their natural dimensions
   const popupTypes = [
@@ -74,6 +76,7 @@ function PopupSystem() {
   // Remove a popup
   function removePopup(id) {
     setPopups(prev => prev.filter(popup => popup.id !== id));
+    setClosedCount(prev => prev + 1);
   }
 
   // Keyboard controls
@@ -88,6 +91,10 @@ function PopupSystem() {
         createPopup(); // Spawn now
       } else if (event.key.toLowerCase() === 'c') {
         setPopups([]); // Clear all
+      } else if (event.key.toLowerCase() === 'p') {
+        setIsPaused(prev => !prev); // Toggle pause
+      } else if (event.key.toLowerCase() === 'r') {
+        setClosedCount(0); // Reset counter
       }
     }
 
@@ -95,11 +102,13 @@ function PopupSystem() {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, []);
 
-  // Auto spawn popups
+  // Auto spawn popups (only when not paused)
   useEffect(() => {
+    if (isPaused) return;
+    
     const interval = setInterval(createPopup, spawnSpeed);
     return () => clearInterval(interval);
-  }, [spawnSpeed, nextId]);
+  }, [spawnSpeed, nextId, isPaused]);
 
   return (
     <>
@@ -133,11 +142,19 @@ function PopupSystem() {
 
       {/* Simple controls display */}
       <div className="fixed bottom-4 right-4 bg-black/80 text-white p-3 rounded text-sm">
+        <div className="flex items-center gap-2">
+          <span>Status:</span>
+          <span className={isPaused ? 'text-red-400' : 'text-green-400'}>
+            {isPaused ? 'PAUSED' : 'RUNNING'}
+          </span>
+        </div>
         <div>Speed: {spawnSpeed}ms</div>
-        <div>Count: {popups.length}</div>
-        <div className="text-xs mt-2">
+        <div>Active: {popups.length}</div>
+        <div className="text-green-400">Closed: {closedCount}</div>
+        <div className="text-xs mt-2 space-y-1">
           <div>+ faster | - slower</div>
-          <div>space = spawn | c = clear</div>
+          <div>p = pause | space = spawn</div>
+          <div>c = clear | r = reset counter</div>
         </div>
       </div>
     </>
