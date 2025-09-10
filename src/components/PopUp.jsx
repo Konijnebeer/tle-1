@@ -36,7 +36,6 @@ function WarningPopup({ id, onClose }) {
 function PopupSystem() {
   const [popups, setPopups] = useState([]);
   const [spawnSpeed, setSpawnSpeed] = useState(2000);
-  const [nextId, setNextId] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [closedCount, setClosedCount] = useState(0);
   const popupRef = useRef(popups);
@@ -47,7 +46,7 @@ function PopupSystem() {
 
   // List of different popup types with their natural dimensions
   const popupTypes = [
-    { type: 'image', url: 'Popups/8ball_1.png', width: 402, height: 120 }, // 8ball_1.png
+  { type: 'image', url: 'Popups/8ball_1.png', width: 402, height: 120 }, // 8ball_1.png
   { type: 'image', url: 'Popups/8ball_2.png', width: 432, height: 120 }, // 8ball_2.png
   { type: 'image', url: 'Popups/8ball_3.png', width: 326, height: 120 }, // 8ball_3.png
   { type: 'image', url: 'Popups/apple.png', width: 255, height: 120 }, // apple.png
@@ -81,14 +80,13 @@ function PopupSystem() {
   function createPopup() {
     const popupLimit = 50;
     if (popupRef.current.length >= popupLimit) return;
+    
     const popup = popupTypes[Math.floor(Math.random() * popupTypes.length)];
-
-    // Use popup dimensions for proper positioning, fallback to 200 for components
     const popupWidth = popup.width || 200;
     const popupHeight = popup.height || 200;
 
     const newPopup = {
-      id: nextId,
+      id: Date.now() + Math.random(), // Use timestamp + random for unique IDs
       x: Math.random() * (window.innerWidth - popupWidth),
       y: Math.random() * (window.innerHeight - popupHeight),
       rotation: Math.random() * 20 - 10,
@@ -96,7 +94,6 @@ function PopupSystem() {
     };
 
     setPopups(prev => [...prev, newPopup]);
-    setNextId(prev => prev + 1);
   }
 
   // Remove a popup
@@ -135,9 +132,30 @@ function PopupSystem() {
   useEffect(() => {
     if (isPaused) return;
 
-    const interval = setInterval(createPopup, spawnSpeed);
+    const interval = setInterval(() => {
+      // Use functional update to avoid stale closure issues
+      setPopups(currentPopups => {
+        const popupLimit = 50;
+        if (currentPopups.length >= popupLimit) return currentPopups;
+        
+        const popup = popupTypes[Math.floor(Math.random() * popupTypes.length)];
+        const popupWidth = popup.width || 200;
+        const popupHeight = popup.height || 200;
+
+        const newPopup = {
+          id: Date.now() + Math.random(), // Use timestamp + random for unique IDs
+          x: Math.random() * (window.innerWidth - popupWidth),
+          y: Math.random() * (window.innerHeight - popupHeight),
+          rotation: Math.random() * 20 - 10,
+          ...popup
+        };
+
+        return [...currentPopups, newPopup];
+      });
+    }, spawnSpeed);
+    
     return () => clearInterval(interval);
-  }, [spawnSpeed, nextId, isPaused]);
+  }, [spawnSpeed, isPaused]);
 
   return (
     <>
