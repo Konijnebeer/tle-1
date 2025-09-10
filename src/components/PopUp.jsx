@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // Simple popup components
 function VirusPopup() {
@@ -39,6 +39,11 @@ function PopupSystem() {
   const [nextId, setNextId] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [closedCount, setClosedCount] = useState(0);
+  const popupRef = useRef(popups);
+
+  useEffect(() => {
+    popupRef.current = popups;
+  }, [popups]);
 
   // List of different popup types with their natural dimensions
   const popupTypes = [
@@ -75,7 +80,7 @@ function PopupSystem() {
   // Create a new popup at random position
   function createPopup() {
     const popupLimit = 50;
-    if (popups.length >= popupLimit) return;
+    if (popupRef.current.length >= popupLimit) return;
     const popup = popupTypes[Math.floor(Math.random() * popupTypes.length)];
 
     // Use popup dimensions for proper positioning, fallback to 200 for components
