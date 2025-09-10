@@ -1,4 +1,7 @@
 import { useState, useEffect, useRef } from "react";
+import * as Checkbox from "@radix-ui/react-checkbox";
+import * as Slider from "@radix-ui/react-slider";
+import { Textarea } from "./textarea"
 
 // Simple popup components
 function VirusPopup() {
@@ -29,6 +32,94 @@ function WarningPopup({ id, onClose }) {
       </button>
       <div className="font-bold">⚠️ Warning!</div>
       <div>System Alert</div>
+    </div>
+  );
+}
+
+function CheckboxPopup({ id, onClose }) {
+  const [checked, setChecked] = useState(false);
+
+  function handleClose(value) {
+    setChecked(value);
+    if (value) {
+      onClose(id);
+    }
+  }
+
+  return (
+    <div className="bg-white border border-gray-300 p-4 rounded shadow-md relative w-64">
+      <div className="font-bold text-black mb-2">📝 Checkbox</div>
+      <label className="flex items-center gap-2 cursor-pointer" htmlFor={`checkbox-${id}`}>
+        <Checkbox.Root
+          id={`checkbox-${id}`}
+          checked={checked}
+          onCheckedChange={handleClose}
+          className="w-5 h-5 rounded border border-gray-400 flex items-center justify-center data-[state=checked]:bg-blue-500"
+        >
+          <Checkbox.Indicator className="text-black">
+            ✓
+          </Checkbox.Indicator>
+        </Checkbox.Root>
+        <span className="text-black">I agree to the terms and conditions</span>
+      </label>
+    </div>
+  );
+}
+
+function SliderPopup({ id, onClose }) {
+  const [value, setValue] = useState([0]);
+  const maxVal = 100;
+
+  function handleValueChange(val) {
+    setValue(val);
+    if (val[0] >= maxVal) {
+      onClose(id);
+    }
+  }
+
+  return (
+    <div className="bg-white border border-gray-300 p-4 rounded shadow-md relative w-64">
+      <div className="font-bold text-black mb-2">🔊 Volume</div>
+      <Slider.Root
+        value={value}
+        onValueChange={handleValueChange}
+        min={0}
+        max={maxVal}
+        step={1}
+        className="w-full h-6 flex items-center"
+      >
+        <Slider.Track className="bg-gray-200 h-2 rounded w-full">
+          <Slider.Range className="bg-blue-500 h-2 rounded" />
+        </Slider.Track>
+        <Slider.Thumb className="block w-4 h-4 bg-blue-500 rounded-full shadow hover:bg-blue-700 focus:outline-none" />
+      </Slider.Root>
+      <div className="text-sm text-black mt-2">Slide to 100 to close</div>
+      <div className="mt-2 text-black text-sm">Value: {value[0]}</div>
+    </div>
+  );
+}
+
+function TextareaPopup({ id, onClose }) {
+  const [value, setValue] = useState("");
+
+  function handleChange(event) {
+    const newVal = event.target.value;
+    setValue(newVal);
+    if (newVal.trim().toLowerCase() === "egg") {
+      onClose(id);
+    }
+  }
+
+  return (
+    <div className="bg-white border border-gray-300 p-4 rounded shadow-md relative w-64">
+      <div className="font-bold text-black mb-2">✏️ Text Box</div>
+      <Textarea
+        placeholder="Type your message here."
+        value={value}
+        onChange={handleChange}
+        className="w-full h-24 p-2 text-black border rounded"
+      />
+      <div className="text-sm text-black mt-2">Type "egg" to close</div>
     </div>
   );
 }
@@ -75,6 +166,9 @@ function PopupSystem() {
     { type: 'component', Component: VirusPopup },
     { type: 'component', Component: ErrorPopup },
     { type: 'component', Component: WarningPopup },
+    { type: 'component', Component: CheckboxPopup },
+    { type: 'component', Component: SliderPopup },
+    { type: 'component', Component: TextareaPopup },
   ];
 
   // Create a new popup at random position
